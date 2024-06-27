@@ -1,0 +1,32 @@
+{
+    "manifest_version": 3,
+    "name": "Robosell",
+    "description": "問い合わせフォーム",
+    "version": "4.1",
+    "action": {
+        "default_popup": "index.html",
+        "default_icon": "icon.png"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "jquery.min.js",
+                "content.js"
+            ],
+            "css": [
+                "content.css"
+            ]
+        }
+    ],
+    "permissions": [
+        "activeTab",
+        "storage",
+        "scripting"
+    ],
+    "icons": {
+        "48": "icon.png"
+    }
+}
