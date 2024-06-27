@@ -2,27 +2,41 @@ const host_url = "https://autofill.doc1.jp/";
 let mForm_CURRENT_DOMAIN = "";
 let mForm_API_KEY = "";
 
-document.getElementById('manual_copy').addEventListener('click', function() {
-  console.log('Manual copy button clicked');
-  
-  // Fetch data from local storage
-  chrome.storage.local.get(["MFORM_MODAL_DATA"], function(data) {
-    let mForm_data = data.MFORM_MODAL_DATA || {};
+document.addEventListener("DOMContentLoaded", function () {
+  var manualCopyButton = document.getElementById("manual_copy");
+  if (manualCopyButton) {
+    manualCopyButton.addEventListener("click", function () {
+      console.log("Manual copy button clicked");
 
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      console.log('Sending message to content script');
-      chrome.tabs.sendMessage(tabs[0].id, {
-        action: "clipModal",
-        data: mForm_data
-      }, function(response) {
-        if (chrome.runtime.lastError) {
-          console.error(chrome.runtime.lastError);
-        } else {
-          console.log("Message sent successfully");
-        }
+      // Fetch data from local storage
+      chrome.storage.local.get(["MFORM_MODAL_DATA"], function (data) {
+        let mForm_data = data.MFORM_MODAL_DATA || {};
+
+        chrome.tabs.query(
+          { active: true, currentWindow: true },
+          function (tabs) {
+            console.log("Sending message to content script");
+            chrome.tabs.sendMessage(
+              tabs[0].id,
+              {
+                action: "clipModal",
+                data: mForm_data,
+              },
+              function (response) {
+                if (chrome.runtime.lastError) {
+                  console.error(chrome.runtime.lastError);
+                } else {
+                  console.log("Message sent successfully");
+                }
+              }
+            );
+          }
+        );
       });
     });
-  });
+  } else {
+    console.warn("The manual_copy element was not found.");
+  }
 });
 
 // Load API key from storage
